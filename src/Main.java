@@ -68,8 +68,27 @@ public class Main {
         }
 
         propagateAchievement(noPoverty, goals, 1, 2);
+        displayAllAchievements(goals);        
+        
     }
 
+    
+    /*
+     * <h1>Display All Achievements</h1>
+     * displayAllAchievements() displays the current achievement value of each vertex. Useful for testing and debugging.
+     * 
+     * @author Elizabeth Cutting
+     * @param graph: network whose achievement values will be displayed
+     */
+    protected static void displayAllAchievements(WeightedGraph<Vertex> graph) {
+    	//print out the current achievement for the base vertex
+    	System.out.println(graph.vertexAt(0).toString() + " " + graph.vertexAt(0).getAchievement());
+    	//print out the achievement for the rest of the vertices
+        for(Vertex v : graph.neighborsOf(graph.vertexAt(0))) {
+        	System.out.println(v.toString() + " " + v.getAchievement());
+        }
+    }
+    
     /**
      * <h1>Propagate Achievement</h1>
      * propagateAchievement takes the <b>achievement metric</b> of one vertex in a graph and propagates it to other vertices.
@@ -83,7 +102,7 @@ public class Main {
      * @param curr current depth of propagation
      * @param depth maximum propagation depth
      */
-    private static void propagateAchievement(Vertex parent, WeightedGraph<Vertex> graph, int curr, int depth) {
+    private static void propagateAchievement(Vertex parent, WeightedGraph<Vertex> graph, double curr, int depth) {
         for (Vertex v : graph.neighborsOf(parent)) {
             /* Increment achievement by amount proportional to
              * the product of achievement scores times the weights of the connections
@@ -92,7 +111,7 @@ public class Main {
             v.setAchievement(v.getAchievement() + (v.getAchievement() * graph
                     .edgesOf(parent)
                     .get((graph.indexOf(v) < graph.indexOf(parent)) ? graph.indexOf(v) : graph.indexOf(v) - 1)
-                    .weight) / Math.pow(16, curr)
+                    .weight) / Math.pow(16, curr - .5)
             );
 
             if (curr != depth) {
