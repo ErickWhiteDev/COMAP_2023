@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
 public class Main {
@@ -35,7 +36,8 @@ public class Main {
         Vertex peaceJusticeAndStrongInstitutions = new Vertex("Peace, Justice, and Strong Institutions");
         Vertex partnershipsForTheGoals = new Vertex("Partnerships for the Goals");
 
-        WeightedGraph<Vertex> goals = new WeightedGraph<>(
+        // Iterable ArrayList of all vertices for use in data writing
+        ArrayList<Vertex> goalList = new ArrayList<>(
                 List.of(noPoverty,
                         zeroHunger,
                         goodHealthAndWellBeing,
@@ -56,6 +58,9 @@ public class Main {
                 )
         );
 
+        WeightedGraph<Vertex> goals = new WeightedGraph<>(goalList);
+
+        // Fill in weights from CSV data
         for (int i = 0; i < 17; i++) {
             for (int j = 0; j < i; j++) {
                 goals.addEdge(i, j, Double.parseDouble(weightsString[i][j]));
@@ -67,8 +72,8 @@ public class Main {
 
     /**
      * <h1>Propagate Achievement</h1>
-     * propagateAchievement takes the achievement metric of one vertex in a graph and propagates it to other vertices.
-     * The relation between propagation and distance from the source vertex is inversely proportional to the distance
+     * propagateAchievement takes the <b>achievement metric</b> of one vertex in a graph and propagates it to other vertices.
+     * The relation between propagation and distance from the source vertex is inversely proportional to the distance (nonlinearly)
      * between the source and the node experiencing the effect. Propagation can end up affecting the original node
      * due to connections in the graph.
      *
@@ -80,6 +85,10 @@ public class Main {
      */
     private static void propagateAchievement(Vertex parent, WeightedGraph<Vertex> graph, int curr, int depth) {
         for (Vertex v : graph.neighborsOf(parent)) {
+            /* Increment achievement by amount proportional to
+             * the product of achievement scores times the weights of the connections
+             * and inversely proportional to distance (nonlinearly)
+             */
             v.setAchievement(v.getAchievement() + (v.getAchievement() * graph
                     .edgesOf(parent)
                     .get((graph.indexOf(v) < graph.indexOf(parent)) ? graph.indexOf(v) : graph.indexOf(v) - 1)
