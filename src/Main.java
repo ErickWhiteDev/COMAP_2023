@@ -1,7 +1,6 @@
 
 import java.util.List;
 import java.io.*;
-import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader("src/weights.csv"));
@@ -56,5 +55,13 @@ public class Main {
                         partnershipsForTheGoals
                 )
         );
+
+        for (int i = 0; i < 17; i++) {
+            for (int j = 0; j < i; j++) {
+                goals.addEdge(i, j, Double.parseDouble(weightsString[i][j]));
+            }
+        }
+
+        System.out.println(goals);
     }
 }

@@ -37,11 +37,11 @@ public class WeightedGraph<Vertex> extends Graph<Vertex, WeightedEdge> {
 		edges.get(edge.v).add(edge.reversed());
 	}
 
-	public void addEdge(int u, int v, float weight) {
+	public void addEdge(int u, int v, double weight) {
 		addEdge(new WeightedEdge(u, v, weight));
 	}
 
-	public void addEdge(Vertex first, Vertex second, float weight) {
+	public void addEdge(Vertex first, Vertex second, double weight) {
 		addEdge(indexOf(first), indexOf(second), weight);
 	}
 
