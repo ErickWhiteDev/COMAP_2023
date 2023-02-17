@@ -9,6 +9,7 @@ public class Vertex {
 
     public Vertex(String name) {
         this.name = name;
+        this.achievement = 0.5;
     }
 
     public void setAchievement(double achievement) {

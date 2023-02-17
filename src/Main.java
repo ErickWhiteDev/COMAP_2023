@@ -62,6 +62,33 @@ public class Main {
             }
         }
 
-        System.out.println(goals);
+        propagateAchievement(noPoverty, goals, 1, 2);
+    }
+
+    /**
+     * <h1>Propagate Achievement</h1>
+     * propagateAchievement takes the achievement metric of one vertex in a graph and propagates it to other vertices.
+     * The relation between propagation and distance from the source vertex is inversely proportional to the distance
+     * between the source and the node experiencing the effect. Propagation can end up affecting the original node
+     * due to connections in the graph.
+     *
+     * @author Erick White
+     * @param parent vertex that has undergone a change in achievement score
+     * @param graph network through which to propagate
+     * @param curr current depth of propagation
+     * @param depth maximum propagation depth
+     */
+    private static void propagateAchievement(Vertex parent, WeightedGraph<Vertex> graph, int curr, int depth) {
+        for (Vertex v : graph.neighborsOf(parent)) {
+            v.setAchievement(v.getAchievement() + (v.getAchievement() * graph
+                    .edgesOf(parent)
+                    .get((graph.indexOf(v) < graph.indexOf(parent)) ? graph.indexOf(v) : graph.indexOf(v) - 1)
+                    .weight) / Math.pow(16, curr)
+            );
+
+            if (curr != depth) {
+                propagateAchievement(v, graph, curr + 1, depth);
+            }
+        }
     }
 }
