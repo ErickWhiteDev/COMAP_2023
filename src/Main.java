@@ -67,18 +67,20 @@ public class Main {
             }
         }
 
-        propagateAchievement(noPoverty, goals, 1, 2);
-        displayAllAchievements(goals);        
+        // propagateAchievement(noPoverty, goals, 1, 2);
+        // displayAllAchievements(goals);
+
+        // System.out.println(getGoalPriority(zeroHunger, goals, 1, 2));
         
     }
 
     
-    /*
+    /**
      * <h1>Display All Achievements</h1>
      * displayAllAchievements() displays the current achievement value of each vertex. Useful for testing and debugging.
      * 
      * @author Elizabeth Cutting
-     * @param graph: network whose achievement values will be displayed
+     * @param graph network whose achievement values will be displayed
      */
     protected static void displayAllAchievements(WeightedGraph<Vertex> graph) {
     	//print out the current achievement for the base vertex
@@ -118,5 +120,30 @@ public class Main {
                 propagateAchievement(v, graph, curr + 1, depth);
             }
         }
+    }
+
+    /**
+     *
+     * @author Erick White
+     * @param parent node for which priority must be calculated
+     * @param graph network parent node belongs to
+     * @param curr current summation depth level
+     * @param depth maximum summation depth level
+     * @return priority level of node
+     */
+    private static double getGoalPriority(Vertex parent, WeightedGraph<Vertex> graph, int curr, int depth) {
+        double priority = 0;
+        for (Vertex v : graph.neighborsOf(parent)) {
+            priority += graph
+                    .edgesOf(parent)
+                    .get((graph.indexOf(v) < graph.indexOf(parent)) ? graph.indexOf(v) : graph.indexOf(v) - 1)
+                    .weight;
+
+            if (curr != depth) {
+                priority += getGoalPriority(v, graph, curr + 1, depth);
+            }
+        }
+
+        return (priority / Math.abs(priority)) / (Math.sqrt(curr) * Math.pow(1 + Math.abs(priority / Math.pow(16, curr)), curr));
     }
 }
