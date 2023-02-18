@@ -74,12 +74,13 @@ public class Main {
 
         WeightedGraphUtilities.writeNames(goals, "names.txt");
         WeightedGraphUtilities.writeAchievements(goals, "initial_achievements.csv");
+        WeightedGraphUtilities.writePriorities(goals, 17, 2, "priorities.csv");
 
         File modifiedAchievements = new File("modified_achievements.csv");
         FileWriter writeModifiedAchievements = new FileWriter(modifiedAchievements);
         StringBuilder sb = new StringBuilder();
 
-
+        // Set one goal to completed and propagate the changes from doing so
         for (Vertex v : goalList) {
             WeightedGraphUtilities.setInitialAchievements(goals, initialAchievements);
             v.setAchievement(1);

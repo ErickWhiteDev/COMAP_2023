@@ -70,12 +70,12 @@ public abstract class Graph<V, E extends Edge> {
 				.collect(Collectors.toList());
 	}
 
-	// Look up a vertice's index and find its neighbors (convenience method)
+	// Look up a vertex's index and find its neighbors (convenience method)
 	public List<V> neighborsOf(V vertex) {
 		return neighborsOf(indexOf(vertex));
 	}
 
-	// Return all of the edges associated with a vertex at some index
+	// Return all edges associated with a vertex at some index
 	public List<E> edgesOf(int index) {
 		return edges.get(index);
 	}
@@ -85,7 +85,7 @@ public abstract class Graph<V, E extends Edge> {
 		return edgesOf(indexOf(vertex));
 	}
 
-	// Make it easy to pretty-print a Graph
+	// Make it easy to pretty-print a graph
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

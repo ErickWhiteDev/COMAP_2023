@@ -2,36 +2,10 @@ import java.util.ArrayList;
 import java.io.*;
 
 public class WeightedGraphUtilities {
-	
-	/**
-	 * *@author Madison Jones and Elizabeth Cutting
-	 *
-	 */
-	public static void setInitialAchievementVals(WeightedGraph<Vertex> graph)
-	{
-		graph.vertexAt(0).setAchievement(.6);
-		graph.vertexAt(1).setAchievement(.4);
-		graph.vertexAt(2).setAchievement(.6);
-		graph.vertexAt(3).setAchievement(.6);
-		graph.vertexAt(4).setAchievement(.6);
-		graph.vertexAt(5).setAchievement(.6);
-		graph.vertexAt(6).setAchievement(.7);
-		graph.vertexAt(7).setAchievement(.3);
-		graph.vertexAt(8).setAchievement(.8);
-		graph.vertexAt(9).setAchievement(.6);
-		graph.vertexAt(10).setAchievement(.4);
-		graph.vertexAt(11).setAchievement(.7);
-		graph.vertexAt(12).setAchievement(.3);
-		graph.vertexAt(13).setAchievement(.3);
-		graph.vertexAt(14).setAchievement(.6);
-		graph.vertexAt(15).setAchievement(.5);
-		graph.vertexAt(16).setAchievement(.5);
-		
-	}
-	
+
     /**
-     * <h1>Get Layer</h1>
-     * Given a central node, get all nodes a certain depth away from it
+     * <h1>getLayer</h1>
+     * <h2>Given a central {@link Vertex}, get all nodes a certain depth away from it</h2>
      *
      * @author Erick White
      * @param parent central node (propagates outwards from here)
@@ -41,12 +15,12 @@ public class WeightedGraphUtilities {
      * @param layer ArrayList of all vertices on the final layer
      */
     public static void getLayer(Vertex parent, WeightedGraph<Vertex> graph, int curr, int depth, ArrayList<Vertex> layer) {
-        if (depth == 0) {
+        if (depth == 0) { // The zero layer is only the parent node
             layer.add(parent);
         }
         else {
             for (Vertex v : graph.neighborsOf(parent)) {
-                if (curr == depth - 1) {
+                if (curr == depth - 1) { // Only add nodes in the final layer
                     layer.add(v);
                 }
                 else {
@@ -58,7 +32,7 @@ public class WeightedGraphUtilities {
     }
 
     /**
-     * <h1>Get Layer Weights</h1>
+     * <h1>getLayerWeights</h1>
      * Returns a vector of the <b>weights of connections</b> of a given layer.
      *
      * @author Erick White
@@ -83,7 +57,7 @@ public class WeightedGraphUtilities {
     }
 
     /**
-     * <h1>Get Layer Achievements</h1>
+     * <h1>getLayerAchievements</h1>
      * Returns a vector of the <b>achievement metrics</b> of a given layer.
      *
      * @author Erick White
@@ -104,7 +78,7 @@ public class WeightedGraphUtilities {
     }
 
     /**
-     * <h1>Dot Product</h1>
+     * <h1>dotProduct</h1>
      * Takes the dot product of two vectors of doubles.
      *
      * @author Erick White
@@ -123,7 +97,7 @@ public class WeightedGraphUtilities {
     }
 
     /**
-     * <h1>Sum Array</h1>
+     * <h1>sumArray</h1>
      * Sums contents of an array.
      *
      * @author Erick White
@@ -141,8 +115,8 @@ public class WeightedGraphUtilities {
     }
 
     /**
-     * <h1>Get Goal Priority</h1>
-     * Find the priority level of a node based on the weights of its connections.
+     * <h1>getGoalPriority</h1>
+     * Find the priority level of a {@link Vertex} based on the weights of its connections.
      * The priority is inversely proportional to the layer depth.
      *
      * @author Erick White
@@ -169,11 +143,13 @@ public class WeightedGraphUtilities {
     }
 
     /**
-     * <h1>Get Neighborhood Achievement</h1>
-     * getNeighborhoodAchievement takes the <b>achievement metrics</b> of surrounding vertex in a graph and propagates it to the parent vertex.
+     * <h1>getNeighborhoodAchievement</h1>
+     * Takes the <b>achievement metrics</b> of surrounding {@link Vertex Vertices} in a graph and propagates it to the parent vertex.
      * The relation between propagation and distance from the source vertex is inversely proportional to the distance (nonlinearly)
-     * between the source and the node experiencing the effect. Propagation can end up depending on the original node
-     * due to connections in the graph.
+     * between the source and the node experiencing the effect.
+     * Propagation can end up depending on the original node due to connections in the graph.
+     * The constant k is a number between 0 and 1 (usually 0) that affects how quickly the fall-off effect occurs.
+     * <b>Achievement scores should not exceed 1.</b>
      *
      * @author Erick White
      * @param parent vertex that has undergone a change in achievement score
@@ -197,10 +173,12 @@ public class WeightedGraphUtilities {
     }
 
     /**
-     * <h1>Update Achievements</h1>
-     * updateAchievements takes all the vertices in a network and adjusts the values of the achievements
-     * corresponding to their weighted connections. Propagation can end up depending on the original node
-     * due to connections in the graph.
+     * <h1>updateAchievements</h1>
+     * Takes all the {@link Vertex Vertices} in a network and adjusts the values of the achievements
+     * corresponding to their weighted connections.
+     * Propagation can end up depending on the original node due to connections in the graph.
+     * The constant k is a number between 0 and 1 (usually 0) that affects how quickly the fall-off effect occurs.
+     * <b>Achievement scores should not exceed 1.</b>
      *
      * @author Erick White
      * @param graph graph being updated
@@ -221,8 +199,8 @@ public class WeightedGraphUtilities {
     }
 
     /**
-     * <h1>Display All Achievements</h1>
-     * displayAllAchievements() displays the current achievement value of each vertex. Useful for testing and debugging.
+     * <h1>displayAllAchievements</h1>
+     * Displays the current achievement value of each {@link Vertex}. Useful for testing and debugging.
      *
      * @author Elizabeth Cutting
      * @param graph network whose achievement values will be displayed
@@ -237,8 +215,8 @@ public class WeightedGraphUtilities {
     }
 
     /**
-     * <h1>Set Initial Achievements</h1>
-     * Sets the initial achievement values of all vertices in the graph.
+     * <h1>setInitialAchievements</h1>
+     * Sets the initial achievement values of all {@link Vertex Vertices} in the graph.
      *
      * @author Erick White
      * @param graph graph for which initial values must be set
@@ -251,8 +229,8 @@ public class WeightedGraphUtilities {
     }
 
     /**
-     * <h1>Write Names</h1>
-     * Write the names of vertices to a CSV file.
+     * <h1>writeNames</h1>
+     * Write the <b>names</b> of {@link Vertex Vertices} to a CSV file.
      *
      * @author Erick White
      * @param graph network being read
@@ -275,8 +253,8 @@ public class WeightedGraphUtilities {
     }
 
     /**
-     * <h1>Write Achievements</h1>
-     * Write the <b>achievement metrics</b> of vertices to a CSV file.
+     * <h1>writeAchievements</h1>
+     * Write the <b>achievement metrics</b> of {@link Vertex Vertices} to a CSV file.
      *
      * @author Erick White
      * @param graph network being read
@@ -290,6 +268,30 @@ public class WeightedGraphUtilities {
 
         for (int i = 0; i < graph.getVertexCount(); i++) {
             sb.append(graph.vertexAt(i).getAchievement());
+            sb.append(',');
+        }
+
+        writeOutput.write(sb.toString());
+
+        writeOutput.close();
+    }
+
+    /**
+     * <h1>writePriorities</h1>
+     * Write the <b>priority scores</b> of {@link Vertex Vertices} to a CSV file.
+     *
+     * @author Erick White
+     * @param graph network being read
+     * @param outputName name of output file
+     * @throws IOException unable to create file
+     */
+    public static void writePriorities(WeightedGraph<Vertex> graph, int graphSize, int depth, String outputName) throws IOException {
+        File output = new File(outputName);
+        FileWriter writeOutput = new FileWriter(output);
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < graph.getVertexCount(); i++) {
+            sb.append(getGoalPriority(graph.vertexAt(i), graph, graphSize, depth));
             sb.append(',');
         }
 

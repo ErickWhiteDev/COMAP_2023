@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.function.IntConsumer;
 
 public class WeightedGraph<Vertex> extends Graph<Vertex, WeightedEdge> {
 
@@ -30,8 +28,7 @@ public class WeightedGraph<Vertex> extends Graph<Vertex, WeightedEdge> {
 		super(vertices);
 	}
 
-	// This is an undirected graph, so we always add
-	// edges in both directions
+	// This is an undirected graph, so we always add edges in both directions
 	public void addEdge(WeightedEdge edge) {
 		edges.get(edge.u).add(edge);
 		edges.get(edge.v).add(edge.reversed());
@@ -45,7 +42,7 @@ public class WeightedGraph<Vertex> extends Graph<Vertex, WeightedEdge> {
 		addEdge(indexOf(first), indexOf(second), weight);
 	}
 
-	// Make it easy to pretty-print a Graph
+	// Make it easy to pretty-print a graph
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -63,41 +60,6 @@ public class WeightedGraph<Vertex> extends Graph<Vertex, WeightedEdge> {
 		return path.stream().mapToDouble(we -> we.weight).sum();
 	}
 
-	// Find the minimum-spanning tree of this graph using Jarnik's algorithm
-	// *start* is the vertex index to start the search at
-	public List<WeightedEdge> mst(int start) {
-		LinkedList<WeightedEdge> result = new LinkedList<>(); // final mst
-		if (start < 0 || start > (getVertexCount() - 1)) {
-			return result;
-		}
-		PriorityQueue<WeightedEdge> pq = new PriorityQueue<>();
-		boolean[] visited = new boolean[getVertexCount()]; // where we've been
-
-		// this is like a "visit" inner function
-		IntConsumer visit = index -> {
-			visited[index] = true; // mark as visited
-			for (WeightedEdge edge : edgesOf(index)) {
-				// add all edges coming from here to pq
-				if (!visited[edge.v]) {
-					pq.offer(edge);
-				}
-			}
-		};
-
-		visit.accept(start); // the first vertex is where everything begins
-		while (!pq.isEmpty()) { // keep going while there are edges to process
-			WeightedEdge edge = pq.poll();
-			if (visited[edge.v]) {
-				continue; // don't ever revisit
-			}
-			// this is the current smallest, so add it to solution
-			result.add(edge);
-			visit.accept(edge.v); // visit where this connects
-		}
-
-		return result;
-	}
-
 	public void printWeightedPath(List<WeightedEdge> wp) {
 		for (WeightedEdge edge : wp) {
 			System.out.println(vertexAt(edge.u) + " " + edge.weight + "> " + vertexAt(edge.v));
@@ -105,8 +67,7 @@ public class WeightedGraph<Vertex> extends Graph<Vertex, WeightedEdge> {
 		System.out.println("Total Weight: " + totalWeight(wp));
 	}
 
-	// Takes a map of edges to reach each node and return a list of
-	// edges that goes from *start* to *end*
+	// Takes a map of edges to reach each node and return a list of edges that goes from *start* to *end*
 	public static List<WeightedEdge> pathMapToPath(int start, int end, Map<Integer, WeightedEdge> pathMap) {
 		if (pathMap.size() == 0) {
 			return List.of();
