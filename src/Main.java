@@ -60,18 +60,26 @@ public class Main {
 
         WeightedGraph<Vertex> goals = new WeightedGraph<>(goalList);
 
+        Vertex test1 = new Vertex("test vertex 1");
+        Vertex test2 = new Vertex("test vertex 2");
+        Vertex test3 = new Vertex("test vertex 3");
+        Vertex test4 = new Vertex("test vertex 4");
+
+        WeightedGraph<Vertex> testGraph = new WeightedGraph<>(List.of(test1, test2, test3,  test4));
+
+        testGraph.addEdge(test1, test2, 0.5);
+        testGraph.addEdge(test1, test3, 0.6);
+        testGraph.addEdge(test1, test4, -.4);
+        testGraph.addEdge(test2, test3, 0.1);
+        testGraph.addEdge(test2, test4, 0);
+        testGraph.addEdge(test3, test4, -.2);
+
         // Fill in weights from CSV data
         for (int i = 0; i < 17; i++) {
             for (int j = 0; j < i; j++) {
                 goals.addEdge(i, j, Double.parseDouble(weightsString[i][j]));
             }
         }
-
-        // propagateAchievement(noPoverty, goals, 1, 2);
-        // displayAllAchievements(goals);
-
-        // System.out.println(getGoalPriority(zeroHunger, goals, 1, 2));
-        
     }
 
     
@@ -123,27 +131,80 @@ public class Main {
     }
 
     /**
+     * <h1>Get Goal Priority</h1>
+     * Find the priority level of a node based on the weights of its connections.
+     * The priority is inversely proportional to the layer depth.
      *
      * @author Erick White
      * @param parent node for which priority must be calculated
      * @param graph network parent node belongs to
-     * @param curr current summation depth level
      * @param depth maximum summation depth level
      * @return priority level of node
      */
-    private static double getGoalPriority(Vertex parent, WeightedGraph<Vertex> graph, int curr, int depth) {
+    private static double getGoalPriority(Vertex parent, WeightedGraph<Vertex> graph, int layerSize, int depth) {
+        ArrayList<ArrayList<Vertex>> layers = new ArrayList<>();
         double priority = 0;
-        for (Vertex v : graph.neighborsOf(parent)) {
-            priority += graph
-                    .edgesOf(parent)
-                    .get((graph.indexOf(v) < graph.indexOf(parent)) ? graph.indexOf(v) : graph.indexOf(v) - 1)
-                    .weight;
+        double layerWeight;
 
-            if (curr != depth) {
-                priority += getGoalPriority(v, graph, curr + 1, depth);
+        for (int i = 0; i < depth; i++) {
+            layers.add(new ArrayList<>());
+            getLayer(parent, graph, 0, i, layers.get(i));
+            layerWeight = sumLayerWeights(layers.get(i), graph) / Math.pow(layerSize, i + 1);
+
+            priority += (layerWeight / Math.abs(layerWeight)) / (Math.sqrt(i + 1) * Math.pow(1 + layerWeight, i + 1));
+        }
+
+        return priority;
+    }
+
+    /**
+     * <h1>Sum Layer Weights</h1>
+     * Given an arbitrary layer from the getLayer() function, sum up the weights of all vertices it contains
+     *
+     * @param layer layer with weights being summed
+     * @param graph network to which layer belongs
+     * @return sum of all weights in a layer
+     */
+    private static double sumLayerWeights(ArrayList<Vertex> layer, WeightedGraph<Vertex> graph) {
+        double sum = 0;
+
+        for (Vertex v : layer) {
+            for (Vertex n : graph.neighborsOf(v)) {
+                sum += graph
+                        .edgesOf(v)
+                        .get((graph.indexOf(n) < graph.indexOf(v)) ? graph.indexOf(n) : graph.indexOf(n) - 1)
+                        .weight;
             }
         }
 
-        return (priority / Math.abs(priority)) / (Math.sqrt(curr) * Math.pow(1 + Math.abs(priority / Math.pow(16, curr)), curr));
+        return sum;
+    }
+
+    /**
+     * <h1>Get Layer</h1>
+     * Given a central node, get all nodes a certain depth away from it
+     *
+     * @author Erick White
+     * @param parent central node (propagates outwards from here)
+     * @param graph network node belongs to
+     * @param curr current layer depth being checked
+     * @param depth layer desired
+     * @param layer ArrayList of all vertices on the final layer
+     */
+    private static void getLayer(Vertex parent, WeightedGraph<Vertex> graph, int curr, int depth, ArrayList<Vertex> layer) {
+        if (depth == 0) {
+            layer.add(parent);
+        }
+        else {
+            for (Vertex v : graph.neighborsOf(parent)) {
+                if (curr == depth - 1) {
+                    layer.add(v);
+                }
+                else {
+                    getLayer(v, graph, curr + 1, depth, layer);
+                }
+            }
+        }
+
     }
 }
