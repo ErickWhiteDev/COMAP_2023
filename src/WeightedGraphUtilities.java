@@ -122,19 +122,17 @@ public class WeightedGraphUtilities {
      * @author Erick White
      * @param parent node for which priority must be calculated
      * @param graph network parent node belongs to
-     * @param graphSize number of vertices in graph
-     * @param depth maximum summation depth level
      * @return priority level of node
      */
-    public static double getGoalPriority(Vertex parent, WeightedGraph<Vertex> graph, int graphSize, int depth) {
+    public static double getGoalPriority(Vertex parent, WeightedGraph<Vertex> graph) {
         ArrayList<ArrayList<Vertex>> layers = new ArrayList<>();
         double priority = 0;
         double layerWeight;
 
-        for (int i = 0; i < depth; i++) {
+        for (int i = 0; i < graph.getDepth(); i++) {
             layers.add(new ArrayList<>());
             getLayer(parent, graph, 0, i, layers.get(i));
-            layerWeight = sumArray(getLayerWeights(layers.get(i), graph)) / Math.pow(graphSize - 1, i + 1);
+            layerWeight = sumArray(getLayerWeights(layers.get(i), graph)) / Math.pow(graph.getVertexCount() - 1, i + 1);
 
             priority += (layerWeight / Math.abs(layerWeight)) / (Math.sqrt(i + 1) * Math.pow(1 + layerWeight, i + 1));
         }
@@ -148,25 +146,21 @@ public class WeightedGraphUtilities {
      * The relation between propagation and distance from the source vertex is inversely proportional to the distance (nonlinearly)
      * between the source and the node experiencing the effect.
      * Propagation can end up depending on the original node due to connections in the graph.
-     * The constant k is a number between 0 and 1 (usually 0) that affects how quickly the fall-off effect occurs.
      * <b>Achievement scores should not exceed 1.</b>
      *
      * @author Erick White
      * @param parent vertex that has undergone a change in achievement score
      * @param graph network through which to propagate
-     * @param graphSize number of vertices in graph
-     * @param depth maximum propagation depth
-     * @param k coefficient determining fall-off rate of propagation
      */
-    public static double getNeighborhoodAchievement(Vertex parent, WeightedGraph<Vertex> graph, int graphSize, int depth, double k) {
+    public static double getNeighborhoodAchievement(Vertex parent, WeightedGraph<Vertex> graph) {
         ArrayList<ArrayList<Vertex>> layers = new ArrayList<>();
         double weightedAchievementProduct = 0;
 
-        for (int i = 0; i < depth; i++) {
+        for (int i = 0; i < graph.getDepth(); i++) {
             layers.add(new ArrayList<>());
             getLayer(parent, graph, 0, i, layers.get(i));
 
-            weightedAchievementProduct += dotProduct(getLayerWeights(layers.get(i), graph), getLayerAchievements(layers.get(i), graph)) / Math.pow(graphSize - 1, i + 1 - k);
+            weightedAchievementProduct += dotProduct(getLayerWeights(layers.get(i), graph), getLayerAchievements(layers.get(i), graph)) / Math.pow((graph.getVertexCount() - 1) * graph.getK(), i + 1);
         }
 
         return parent.getAchievement() + weightedAchievementProduct;
@@ -177,20 +171,16 @@ public class WeightedGraphUtilities {
      * Takes all the {@link Vertex Vertices} in a network and adjusts the values of the achievements
      * corresponding to their weighted connections.
      * Propagation can end up depending on the original node due to connections in the graph.
-     * The constant k is a number between 0 and 1 (usually 0) that affects how quickly the fall-off effect occurs.
      * <b>Achievement scores should not exceed 1.</b>
      *
      * @author Erick White
      * @param graph graph being updated
-     * @param graphSize number of vertices in graph
-     * @param depth maximum search depth for updates
-     * @param k coefficient determining fall-off rate of achievement propagation
      */
-    public static void updateAchievements(WeightedGraph<Vertex> graph, int graphSize, int depth, double k) {
+    public static void updateAchievements(WeightedGraph<Vertex> graph) {
         double[] newAchievements = new double[graph.getVertexCount()];
 
         for (int i = 0; i < graph.getVertexCount(); i++) {
-            newAchievements[i] = getNeighborhoodAchievement(graph.vertexAt(i), graph, graphSize - 1, depth, k);
+            newAchievements[i] = getNeighborhoodAchievement(graph.vertexAt(i), graph);
         }
 
         for (int i = 0; i < graph.getVertexCount(); i++) {
@@ -205,7 +195,7 @@ public class WeightedGraphUtilities {
      * @author Elizabeth Cutting
      * @param graph network whose achievement values will be displayed
      */
-    public static void displayAllAchievements(WeightedGraph<Vertex> graph) {
+    public static void  displayAllAchievements(WeightedGraph<Vertex> graph) {
         //print out the current achievement for the base vertex
         System.out.println(graph.vertexAt(0).toString() + " " + graph.vertexAt(0).getAchievement());
         //print out the achievement for the rest of the vertices
@@ -266,6 +256,8 @@ public class WeightedGraphUtilities {
         FileWriter writeOutput = new FileWriter(output);
         StringBuilder sb = new StringBuilder();
 
+        updateAchievements(graph);
+
         for (int i = 0; i < graph.getVertexCount(); i++) {
             sb.append(graph.vertexAt(i).getAchievement());
             sb.append(',');
@@ -285,13 +277,13 @@ public class WeightedGraphUtilities {
      * @param outputName name of output file
      * @throws IOException unable to create file
      */
-    public static void writePriorities(WeightedGraph<Vertex> graph, int graphSize, int depth, String outputName) throws IOException {
+    public static void writePriorities(WeightedGraph<Vertex> graph, String outputName) throws IOException {
         File output = new File(outputName);
         FileWriter writeOutput = new FileWriter(output);
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < graph.getVertexCount(); i++) {
-            sb.append(getGoalPriority(graph.vertexAt(i), graph, graphSize, depth));
+            sb.append(getGoalPriority(graph.vertexAt(i), graph));
             sb.append(',');
         }
 

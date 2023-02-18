@@ -23,9 +23,21 @@ import java.util.List;
 import java.util.Map;
 
 public class WeightedGraph<Vertex> extends Graph<Vertex, WeightedEdge> {
+	private int depth;
+	private double k;
 
-	public WeightedGraph(List<Vertex> vertices) {
+	public WeightedGraph(List<Vertex> vertices, int depth, double k) {
 		super(vertices);
+		this.depth = depth;
+		this.k = k;
+	}
+
+	public int getDepth() {
+		return this.depth;
+	}
+
+	public double getK() {
+		return this.k;
 	}
 
 	// This is an undirected graph, so we always add edges in both directions

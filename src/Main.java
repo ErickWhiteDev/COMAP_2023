@@ -57,7 +57,7 @@ public class Main {
                 )
         );
 
-        WeightedGraph<Vertex> goals = new WeightedGraph<>(goalList);
+        WeightedGraph<Vertex> goals = new WeightedGraph<>(goalList, 3, 1.5);
 
         // Fill in weights from CSV data
         for (int i = 0; i < 17; i++) {
@@ -73,8 +73,8 @@ public class Main {
         WeightedGraphUtilities.setInitialAchievements(goals, initialAchievements);
 
         WeightedGraphUtilities.writeNames(goals, "names.txt");
-        WeightedGraphUtilities.writeAchievements(goals, "initial_achievements.csv");
-        WeightedGraphUtilities.writePriorities(goals, 17, 2, "priorities.csv");
+        WeightedGraphUtilities.writeAchievements(goals,  "initial_achievements.csv");
+        WeightedGraphUtilities.writePriorities(goals, "priorities.csv");
 
         File modifiedAchievements = new File("modified_achievements.csv");
         FileWriter writeModifiedAchievements = new FileWriter(modifiedAchievements);
@@ -84,7 +84,20 @@ public class Main {
         for (Vertex v : goalList) {
             WeightedGraphUtilities.setInitialAchievements(goals, initialAchievements);
             v.setAchievement(1);
-            WeightedGraphUtilities.updateAchievements(goals, 17, 2, 0);
+            WeightedGraphUtilities.updateAchievements(goals);
+
+            for (Vertex n : goalList) {
+                sb.append(n.getAchievement());
+                sb.append(',');
+            }
+
+            sb.append('\n');
+        }
+
+        for (Vertex v : goalList) {
+            WeightedGraphUtilities.setInitialAchievements(goals, initialAchievements);
+            v.setAchievement(0);
+            WeightedGraphUtilities.updateAchievements(goals);
 
             for (Vertex n : goalList) {
                 sb.append(n.getAchievement());
