@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.io.*;
 
 public class WeightedGraphUtilities {
     /**
@@ -120,11 +121,11 @@ public class WeightedGraphUtilities {
      * @author Erick White
      * @param parent node for which priority must be calculated
      * @param graph network parent node belongs to
-     * @param layerSize number of vertices in layer
+     * @param graphSize number of vertices in graph
      * @param depth maximum summation depth level
      * @return priority level of node
      */
-    public static double getGoalPriority(Vertex parent, WeightedGraph<Vertex> graph, int layerSize, int depth) {
+    public static double getGoalPriority(Vertex parent, WeightedGraph<Vertex> graph, int graphSize, int depth) {
         ArrayList<ArrayList<Vertex>> layers = new ArrayList<>();
         double priority = 0;
         double layerWeight;
@@ -132,7 +133,7 @@ public class WeightedGraphUtilities {
         for (int i = 0; i < depth; i++) {
             layers.add(new ArrayList<>());
             getLayer(parent, graph, 0, i, layers.get(i));
-            layerWeight = sumArray(getLayerWeights(layers.get(i), graph)) / Math.pow(layerSize, i + 1);
+            layerWeight = sumArray(getLayerWeights(layers.get(i), graph)) / Math.pow(graphSize - 1, i + 1);
 
             priority += (layerWeight / Math.abs(layerWeight)) / (Math.sqrt(i + 1) * Math.pow(1 + layerWeight, i + 1));
         }
@@ -150,11 +151,11 @@ public class WeightedGraphUtilities {
      * @author Erick White
      * @param parent vertex that has undergone a change in achievement score
      * @param graph network through which to propagate
-     * @param layerSize size of one layer of vertices
+     * @param graphSize number of vertices in graph
      * @param depth maximum propagation depth
      * @param k coefficient determining fall-off rate of propagation
      */
-    public static double getNeighborhoodAchievement(Vertex parent, WeightedGraph<Vertex> graph, int layerSize, int depth, double k) {
+    public static double getNeighborhoodAchievement(Vertex parent, WeightedGraph<Vertex> graph, int graphSize, int depth, double k) {
         ArrayList<ArrayList<Vertex>> layers = new ArrayList<>();
         double weightedAchievementProduct = 0;
 
@@ -162,7 +163,7 @@ public class WeightedGraphUtilities {
             layers.add(new ArrayList<>());
             getLayer(parent, graph, 0, i, layers.get(i));
 
-            weightedAchievementProduct += dotProduct(getLayerWeights(layers.get(i), graph), getLayerAchievements(layers.get(i), graph)) / Math.pow(layerSize, i + 1 - k);
+            weightedAchievementProduct += dotProduct(getLayerWeights(layers.get(i), graph), getLayerAchievements(layers.get(i), graph)) / Math.pow(graphSize - 1, i + 1 - k);
         }
 
         return parent.getAchievement() + weightedAchievementProduct;
@@ -176,19 +177,19 @@ public class WeightedGraphUtilities {
      *
      * @author Erick White
      * @param graph graph being updated
-     * @param layerSize size of one layer of vertices
+     * @param graphSize number of vertices in graph
      * @param depth maximum search depth for updates
      * @param k coefficient determining fall-off rate of achievement propagation
      */
-    public static void updateAchievements(WeightedGraph<Vertex> graph, int layerSize, int depth, double k) {
+    public static void updateAchievements(WeightedGraph<Vertex> graph, int graphSize, int depth, double k) {
         double[] newAchievements = new double[graph.getVertexCount()];
 
         for (int i = 0; i < graph.getVertexCount(); i++) {
-            newAchievements[i] = getNeighborhoodAchievement(graph.vertexAt(i), graph, layerSize, depth, k);
+            newAchievements[i] = getNeighborhoodAchievement(graph.vertexAt(i), graph, graphSize - 1, depth, k);
         }
 
         for (int i = 0; i < graph.getVertexCount(); i++) {
-            graph.vertexAt(i).setAchievement(newAchievements[i]);
+            graph.vertexAt(i).setAchievement((newAchievements[i] > 0) ? Math.min(newAchievements[i], 1) : Math.max(newAchievements[i], -1));
         }
     }
 
@@ -206,5 +207,67 @@ public class WeightedGraphUtilities {
         for(Vertex v : graph.neighborsOf(graph.vertexAt(0))) {
             System.out.println(v.toString() + " " + v.getAchievement());
         }
+    }
+
+    /**
+     * <h1>Set Initial Achievements</h1>
+     * Sets the initial achievement values of all vertices in the graph.
+     *
+     * @author Erick White
+     * @param graph graph for which initial values must be set
+     * @param achievements initial values
+     */
+    public static void setInitialAchievements(WeightedGraph<Vertex> graph, ArrayList<Double> achievements) {
+        for (int i = 0; i < graph.getVertexCount(); i++) {
+            graph.vertexAt(i).setAchievement(achievements.get(i));
+        }
+    }
+
+    /**
+     * <h1>Write Names</h1>
+     * Write the names of vertices to a CSV file.
+     *
+     * @author Erick White
+     * @param graph network being read
+     * @param outputName name of output file
+     * @throws IOException unable to create file
+     */
+    public static void writeNames(WeightedGraph<Vertex> graph, String outputName) throws IOException {
+        File output = new File(outputName);
+        FileWriter writeOutput = new FileWriter(output);
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < graph.getVertexCount(); i++) {
+            sb.append(graph.vertexAt(i).toString());
+            sb.append('\n');
+        }
+
+        writeOutput.write(sb.toString());
+
+        writeOutput.close();
+    }
+
+    /**
+     * <h1>Write Achievements</h1>
+     * Write the <b>achievement metrics</b> of vertices to a CSV file.
+     *
+     * @author Erick White
+     * @param graph network being read
+     * @param outputName name of output file
+     * @throws IOException unable to create file
+     */
+    public static void writeAchievements(WeightedGraph<Vertex> graph, String outputName) throws IOException {
+        File output = new File(outputName);
+        FileWriter writeOutput = new FileWriter(output);
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < graph.getVertexCount(); i++) {
+            sb.append(graph.vertexAt(i).getAchievement());
+            sb.append(',');
+        }
+
+        writeOutput.write(sb.toString());
+
+        writeOutput.close();
     }
 }

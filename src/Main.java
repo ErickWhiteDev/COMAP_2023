@@ -65,5 +65,36 @@ public class Main {
                 goals.addEdge(i, j, Double.parseDouble(weightsString[i][j]));
             }
         }
+
+        ArrayList<Double> initialAchievements = new ArrayList<>(
+                List.of(.6, .4, .6, .6, .6, .6, .7, .3, .8, .6, .4, .7, .3, .3, .6, .5, .5)
+        );
+
+        WeightedGraphUtilities.setInitialAchievements(goals, initialAchievements);
+
+        WeightedGraphUtilities.writeNames(goals, "names.txt");
+        WeightedGraphUtilities.writeAchievements(goals, "initial_achievements.csv");
+
+        File modifiedAchievements = new File("modified_achievements.csv");
+        FileWriter writeModifiedAchievements = new FileWriter(modifiedAchievements);
+        StringBuilder sb = new StringBuilder();
+
+
+        for (Vertex v : goalList) {
+            WeightedGraphUtilities.setInitialAchievements(goals, initialAchievements);
+            v.setAchievement(1);
+            WeightedGraphUtilities.updateAchievements(goals, 17, 2, 0);
+
+            for (Vertex n : goalList) {
+                sb.append(n.getAchievement());
+                sb.append(',');
+            }
+
+            sb.append('\n');
+        }
+
+        writeModifiedAchievements.write(sb.toString());
+
+        writeModifiedAchievements.close();
     }
 }
