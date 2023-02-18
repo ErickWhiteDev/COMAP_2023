@@ -134,10 +134,10 @@ public class WeightedGraphUtilities {
             getLayer(parent, graph, 0, i, layers.get(i));
             layerWeight = sumArray(getLayerWeights(layers.get(i), graph)) / Math.pow(graph.getVertexCount() - 1, i + 1);
 
-            priority += (layerWeight / Math.abs(layerWeight)) / (Math.sqrt(i + 1) * Math.pow(1 + layerWeight, i + 1));
+            priority += (layerWeight / Math.abs(layerWeight)) / (Math.sqrt(i + 1) * Math.pow(1 - Math.abs(layerWeight), i + 1));
         }
 
-        return priority;
+        return Math.exp(priority);
     }
 
     /**
@@ -242,6 +242,21 @@ public class WeightedGraphUtilities {
         writeOutput.close();
     }
 
+    public static void writeInitialAchievements(WeightedGraph<Vertex> graph, String outputName) throws IOException {
+        File output = new File(outputName);
+        FileWriter writeOutput = new FileWriter(output);
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < graph.getVertexCount(); i++) {
+            sb.append(graph.getInitialAchievementValues().get(i));
+            sb.append(',');
+        }
+
+        writeOutput.write(sb.toString());
+
+        writeOutput.close();
+    }
+
     /**
      * <h1>writeAchievements</h1>
      * Write the <b>achievement metrics</b> of {@link Vertex Vertices} to a CSV file.
@@ -290,5 +305,32 @@ public class WeightedGraphUtilities {
         writeOutput.write(sb.toString());
 
         writeOutput.close();
+    }
+
+    /**
+     * <h1>setMultipliers</h1>
+     * Sets the multiplier values of a graph's {@link Vertex Vertices}.
+     *
+     * @author Erick White
+     * @param graph network for which multipliers need to be set
+     * @param multipliers multiplier values
+     */
+    public static void setMultipliers(WeightedGraph<Vertex> graph, double[][] multipliers) {
+        for (int i = 0; i < graph.getVertexCount(); i++) {
+            graph.vertexAt(i).setMultipliers(multipliers[i]);
+        }
+    }
+
+    /**
+     * <h1>clearMultipliers</h1>
+     * Clears the multiplier values of a graph's {@link Vertex Vertices}.
+     *
+     * @author Erick White
+     * @param graph network for which multipliers need to be cleared
+     */
+    public static void clearMultipliers(WeightedGraph<Vertex> graph) {
+        for (int i = 0; i < graph.getVertexCount(); i++) {
+            graph.vertexAt(i).clearMultipliers();
+        }
     }
 }

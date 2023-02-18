@@ -16,15 +16,12 @@
 
 // Modified by Erick White
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WeightedGraph<Vertex> extends Graph<Vertex, WeightedEdge> {
 	private int depth;
 	private double k;
+	private ArrayList<Double> initialAchievementValues = new ArrayList<>();
 
 	public WeightedGraph(List<Vertex> vertices, int depth, double k) {
 		super(vertices);
@@ -38,6 +35,14 @@ public class WeightedGraph<Vertex> extends Graph<Vertex, WeightedEdge> {
 
 	public double getK() {
 		return this.k;
+	}
+
+	public void setInitialAchievementValues(ArrayList<Double> initialAchievementValues) {
+		this.initialAchievementValues.addAll(initialAchievementValues);
+	}
+
+	public ArrayList<Double> getInitialAchievementValues() {
+		return initialAchievementValues;
 	}
 
 	// This is an undirected graph, so we always add edges in both directions
