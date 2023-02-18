@@ -1,6 +1,33 @@
 import java.util.ArrayList;
 
 public class WeightedGraphUtilities {
+	
+	/**
+	 * *@author Madison Jones and Elizabeth Cutting
+	 *
+	 */
+	public static void setInitialAchievementVals(WeightedGraph<Vertex> graph)
+	{
+		graph.vertexAt(0).setAchievement(.6);
+		graph.vertexAt(1).setAchievement(.4);
+		graph.vertexAt(2).setAchievement(.6);
+		graph.vertexAt(3).setAchievement(.6);
+		graph.vertexAt(4).setAchievement(.6);
+		graph.vertexAt(5).setAchievement(.6);
+		graph.vertexAt(6).setAchievement(.7);
+		graph.vertexAt(7).setAchievement(.3);
+		graph.vertexAt(8).setAchievement(.8);
+		graph.vertexAt(9).setAchievement(.6);
+		graph.vertexAt(10).setAchievement(.4);
+		graph.vertexAt(11).setAchievement(.7);
+		graph.vertexAt(12).setAchievement(.3);
+		graph.vertexAt(13).setAchievement(.3);
+		graph.vertexAt(14).setAchievement(.6);
+		graph.vertexAt(15).setAchievement(.5);
+		graph.vertexAt(16).setAchievement(.5);
+		
+	}
+	
     /**
      * <h1>Get Layer</h1>
      * Given a central node, get all nodes a certain depth away from it

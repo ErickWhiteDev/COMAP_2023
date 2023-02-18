@@ -65,5 +65,10 @@ public class Main {
                 goals.addEdge(i, j, Double.parseDouble(weightsString[i][j]));
             }
         }
+        WeightedGraphUtilities.setInitialAchievementVals(goals);
+        WeightedGraphUtilities.displayAllAchievements(goals);
+        WeightedGraphUtilities.updateAchievements(goals, 16, 2, .005);
+        WeightedGraphUtilities.displayAllAchievements(goals);
+//        System.out.println(WeightedGraphUtilities.getGoalPriority(climateAction, goals, 16, 2));
     }
 }
