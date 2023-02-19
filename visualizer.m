@@ -1,7 +1,14 @@
-initial_achievements = readmatrix("initial_achievements.csv");
-achievements = readmatrix("achievements.csv");
-modified_achievements = readmatrix("modified_achievements.csv");
+initial_achievements = readmatrix("initial_achievements.csv"); % Unmodified initial achievement scores
+achievements = readmatrix("achievements.csv"); % Initial achievement scores after achievement propagation
+modified_achievements = readmatrix("modified_achievements.csv"); % Achievement scores after multipliers and completions
+
 concat_achievements = [initial_achievements ; achievements ; modified_achievements]';
+%{
+Row 1 : unmodified initial achievement scores
+Row 2 : initial achievement scores after achievement propagation
+Row 3 : initial achievement scores after effect multipliers
+Rows 4-20 : initial achievement scores after setting one goal to complete
+%}
 
 priorities = readmatrix("priorities.csv");
 
