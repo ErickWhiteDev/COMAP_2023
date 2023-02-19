@@ -38,6 +38,14 @@ public class VectorUtilities {
         return sum;
     }
 
+    /**
+     * <h1>getMagnitude</h1>
+     * Get the magnitude of a vector.
+     *
+     * @author Erick White
+     * @param vec vector to get magnitude of
+     * @return magnitude of vector
+     */
     public static double getMagnitude(ArrayList<Double> vec) {
         double sum = 0;
 

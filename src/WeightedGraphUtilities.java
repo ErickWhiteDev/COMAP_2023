@@ -297,6 +297,14 @@ public class WeightedGraphUtilities {
         }
     }
 
+    /**
+     * <h1>clearMultipliersExceptOne</h1>
+     * Clear a {@link WeightedGraph WeightedGraph's} {@link Vertex Vertices'} multiplier values except for one.
+     *
+     * @author Erick White
+     * @param graph network to set multipliers for
+     * @param keep index of multiplier to keep
+     */
     public static void clearMultipliersExceptOne(WeightedGraph<Vertex> graph, int keep) {
         for (int i = 0; i < graph.getVertexCount(); i++) {
             graph.vertexAt(i).clearMultipliersExceptOne(keep);
