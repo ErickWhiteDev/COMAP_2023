@@ -21,18 +21,19 @@ public class Vertex {
     }
 
     public void clearMultipliers() {
-        setMultipliers(new double[]{1, 1, 1, 1, 1});
+        setMultipliers(new double[]{Math.sqrt(5), Math.sqrt(5), Math.sqrt(5), Math.sqrt(5), Math.sqrt(5)});
     }
 
     public void setAchievement(double achievement) {
         double temp =
                 achievement *
-                this.techMultiplier *
-                this.pandemicMultiplier *
-                this.climateMultiplier *
-                this.warMultiplier *
-                this.refugeeMultiplier;
-
+                        Math.sqrt(
+                                Math.pow(this.techMultiplier, 2) +
+                                Math.pow(this.pandemicMultiplier, 2) +
+                                Math.pow(this.climateMultiplier, 2) +
+                                Math.pow(this.warMultiplier, 2) +
+                                Math.pow(this.refugeeMultiplier, 2)
+                        ) / 5;
         this.achievement = temp > 0 ? Math.min(temp, 1) : Math.max(temp, -1);
     }
 

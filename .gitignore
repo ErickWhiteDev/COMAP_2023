@@ -1,5 +1,12 @@
 # Project exclude paths
 /out/
 /bin/
-.classpath
-.project
+/images/
+*.classpath
+*.project
+*.csv
+!multipliers.csv
+!weights.csv
+*.txt
+*.iml
+*.asv

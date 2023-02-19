@@ -1,6 +1,7 @@
 initial_achievements = readmatrix("initial_achievements.csv");
 achievements = readmatrix("achievements.csv");
-concat_achievements = [initial_achievements ; achievements]';
+modified_achievements = readmatrix("modified_achievements.csv");
+concat_achievements = [initial_achievements ; achievements ; modified_achievements]';
 
 priorities = readmatrix("priorities.csv");
 
@@ -9,18 +10,45 @@ names = readlines("names.txt");
 figure(1);
 bar(concat_achievements(:,[1 ; 2]));
 
-set(gca, 'xtick', 1:numel(concat_achievements(:,1)), 'xticklabels', names);
+set(gca, 'xtick', 1:numel(concat_achievements(:,1)), 'xticklabels', names, 'fontsize', 14);
 xtickangle(60);
+ylim([0 1]);
 
+title("Original Achievement Scores vs. Achievement Scores After Achievement Propagation");
 xlabel("Goals");
-ylabel("Achievement Metric");
-legend('Original Values', 'After Achievement Propagation');
+ylabel("Achievement Scores");
+legend("Original Scores", "Scores After Achievement Propagation");
 
 figure(2);
 bar(priorities(1,:));
 
-set(gca, 'xtick', 1:numel(concat_achievements(:,1)), 'xticklabels', names);
+set(gca, 'xtick', 1:numel(concat_achievements(:,1)), 'xticklabels', names, 'fontsize', 14);
 xtickangle(60);
 
+title("Prioritization Scores for Goals");
 xlabel("Goals");
 ylabel("Prioritization Score");
+
+figure(3);
+bar(concat_achievements(:,[2 ; 3]));
+
+set(gca, 'xtick', 1:numel(concat_achievements(:,1)), 'xticklabels', names, 'fontsize', 14);
+xtickangle(60);
+ylim([0 1]);
+
+title("Original Achievement Scores vs. Achievement Scores After External Effects");
+xlabel("Goals");
+ylabel("Achievement Scores");
+legend("Original Scores", "Scores After External Effects");
+
+% for i = 4:20
+%     figure(i);
+%     bar(concat_achievements(:,[2 ; i]));
+%     set(gca, 'xtick', 1:numel(concat_achievements(:,1)), 'xticklabels', names, 'fontsize', 14);
+%     xtickangle(60);
+%     
+%     title(sprintf('Original Achievement Scores vs. Achievement Scores After "%s" Goal Accomplished', names(i - 3)));
+%     xlabel("Goals");
+%     ylabel("Achievement Scores");
+%     legend("Original Scores", sprintf('Scores After "%s" Goal Accomplished', names(i - 3)));
+% end
