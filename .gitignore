@@ -2,6 +2,7 @@
 /out/
 /bin/
 /images/
+/data/
 *.classpath
 *.project
 *.csv

@@ -1,7 +1,7 @@
 graph = readmatrix("src/weights.csv");
 pad_bottom = zeros([1 17]);
 pad_side = zeros([18 1]);
-names = readlines("names.txt");
+names = readlines("data/names.txt");
 
 adjusted_bottom = [graph ; pad_bottom];
 adjusted = [adjusted_bottom pad_side];
@@ -25,6 +25,7 @@ k = 2.56;
 A = 1 ./ (16 * k).^x_A;
 P = 1 ./ (sqrt(x_P) .* (1 - 1 ./ (16.^x_P)).^x_P);
 
+figure(2);
 hold on;
 pA = plot(x_A, A);
 pP = plot(x_P, P);

@@ -205,8 +205,8 @@ public class WeightedGraphUtilities {
         writeOutput.close();
     }
 
-    public static void writeInitialAchievements(WeightedGraph<Vertex> graph, String outputName) throws IOException {
-        File output = new File(outputName);
+    public static void writeInitialAchievements(WeightedGraph<Vertex> graph, String outputName, String outputDirName) throws IOException {
+        File output = new File(outputDirName, outputName);
         FileWriter writeOutput = new FileWriter(output);
         StringBuilder sb = new StringBuilder();
 
@@ -229,8 +229,8 @@ public class WeightedGraphUtilities {
      * @param outputName name of output file
      * @throws IOException unable to create file
      */
-    public static void writeAchievements(WeightedGraph<Vertex> graph, String outputName) throws IOException {
-        File output = new File(outputName);
+    public static void writeAchievements(WeightedGraph<Vertex> graph, String outputName, String outputDirName) throws IOException {
+        File output = new File(outputDirName, outputName);
         FileWriter writeOutput = new FileWriter(output);
         StringBuilder sb = new StringBuilder();
 
@@ -255,8 +255,8 @@ public class WeightedGraphUtilities {
      * @param outputName name of output file
      * @throws IOException unable to create file
      */
-    public static void writePriorities(WeightedGraph<Vertex> graph, String outputName) throws IOException {
-        File output = new File(outputName);
+    public static void writePriorities(WeightedGraph<Vertex> graph, String outputName, String outputDirName) throws IOException {
+        File output = new File(outputDirName, outputName);
         FileWriter writeOutput = new FileWriter(output);
         StringBuilder sb = new StringBuilder();
 

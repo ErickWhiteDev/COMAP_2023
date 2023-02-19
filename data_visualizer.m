@@ -1,7 +1,7 @@
 %% Setup
-initial_achievements = readmatrix("initial_achievements.csv"); % Unmodified initial achievement scores
-achievements = readmatrix("achievements.csv"); % Initial achievement scores after achievement propagation
-modified_achievements = readmatrix("modified_achievements.csv"); % Achievement scores after multipliers and completions
+initial_achievements = readmatrix("data/initial_achievements.csv"); % Unmodified initial achievement scores
+achievements = readmatrix("data/achievements.csv"); % Initial achievement scores after achievement propagation
+modified_achievements = readmatrix("data/modified_achievements.csv"); % Achievement scores after multipliers and completions
 
 concat_achievements = [initial_achievements ; achievements ; modified_achievements]';
 %{
@@ -12,7 +12,7 @@ Rows 4 - 8 : propagated achievement scores after one effect multiplier
 Rows 9 - 25 : initial achievement scores after setting one goal to complete
 %}
 
-priorities = readmatrix("priorities.csv");
+priorities = readmatrix("data/priorities.csv");
 
 names = readlines("names.txt");
 multiplier_names = readlines("multiplier_names.txt");
