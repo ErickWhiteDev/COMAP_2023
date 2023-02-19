@@ -1,3 +1,4 @@
+%% Setup
 initial_achievements = readmatrix("initial_achievements.csv"); % Unmodified initial achievement scores
 achievements = readmatrix("achievements.csv"); % Initial achievement scores after achievement propagation
 modified_achievements = readmatrix("modified_achievements.csv"); % Achievement scores after multipliers and completions
@@ -14,6 +15,7 @@ priorities = readmatrix("priorities.csv");
 
 names = readlines("names.txt");
 
+%% Original Achievement Scores vs. Achievement Scores After Achievement Propagation
 figure(1);
 bar(concat_achievements(:,[1 ; 2]));
 
@@ -26,6 +28,7 @@ xlabel("Goals");
 ylabel("Achievement Scores");
 legend("Original Scores", "Scores After Achievement Propagation");
 
+%% Prioritization Scores for Goals
 figure(2);
 bar(priorities(1,:));
 
@@ -36,6 +39,7 @@ title("Prioritization Scores for Goals");
 xlabel("Goals");
 ylabel("Prioritization Score");
 
+%% Original Achievement Scores vs. Achievement Scores After External Effects
 figure(3);
 bar(concat_achievements(:,[2 ; 3]));
 
@@ -48,9 +52,32 @@ xlabel("Goals");
 ylabel("Achievement Scores");
 legend("Original Scores", "Scores After External Effects");
 
+%% Original Achievement Scores vs. Achievement Scores After No Poverty Goal Accomplished
+figure(4);
+bar(concat_achievements(:,[1 ; 4]));
+set(gca, 'xtick', 1:numel(concat_achievements(:,1)), 'xticklabels', names, 'fontsize', 14);
+xtickangle(60);
+
+title(sprintf('Original Achievement Scores vs. Achievement Scores After "%s" Goal Accomplished', names(4 - 3)));
+xlabel("Goals");
+ylabel("Achievement Scores");
+legend("Original Scores", sprintf('Scores After "%s" Goal Accomplished', names(4 - 3)));
+
+%% Original Achievement Scores vs. Achievement Scores After Responsible Production and Consumption Goal Accomplished
+figure(15);
+bar(concat_achievements(:,[1 ; 15]));
+set(gca, 'xtick', 1:numel(concat_achievements(:,1)), 'xticklabels', names, 'fontsize', 14);
+xtickangle(60);
+
+title(sprintf('Original Achievement Scores vs. Achievement Scores After "%s" Goal Accomplished', names(15 - 3)));
+xlabel("Goals");
+ylabel("Achievement Scores");
+legend("Original Scores", sprintf('Scores After "%s" Goal Accomplished', names(15 - 3)));
+
+%% Uncomment to generate all comparison graphs
 % for i = 4:20
 %     figure(i);
-%     bar(concat_achievements(:,[2 ; i]));
+%     bar(concat_achievements(:,[1 ; i]));
 %     set(gca, 'xtick', 1:numel(concat_achievements(:,1)), 'xticklabels', names, 'fontsize', 14);
 %     xtickangle(60);
 %     
