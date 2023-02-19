@@ -82,12 +82,16 @@ public class Main {
         // Fill in multipliers from CSV data
         for (int i = 0; i < goals.getVertexCount(); i++) {
             for (int j = 0; j < 5; j++) {
-                multiplierDouble[i][j] = Double.parseDouble(multiplierString[i][j]);
+                multiplierDouble[i][j] = Double.parseDouble(multiplierString[i][j]) * Math.sqrt(5);
             }
         }
 
         ArrayList<Double> initialAchievements = new ArrayList<>(
                 List.of(.6, .4, .6, .6, .6, .6, .7, .3, .8, .6, .4, .7, .3, .3, .6, .5, .5)
+        );
+
+        ArrayList<String> multiplierNames = new ArrayList<>(
+          List.of("Tech", "Pandemic", "Climate", "War", "Refugee")
         );
 
         goals.setInitialAchievementValues(initialAchievements);
@@ -96,6 +100,7 @@ public class Main {
         WeightedGraphUtilities.setInitialAchievements(goals, initialAchievements);
 
         // Write data with only initial conditions and no multipliers
+        Vertex.writeMultiplierNames(multiplierNames, "multiplier_names.txt");
         WeightedGraphUtilities.writeNames(goals, "names.txt");
         WeightedGraphUtilities.writeInitialAchievements(goals, "initial_achievements.csv");
         WeightedGraphUtilities.writeAchievements(goals,  "achievements.csv");
@@ -120,6 +125,25 @@ public class Main {
         sb.append('\n');
 
         WeightedGraphUtilities.clearMultipliers(goals);
+
+        for (int i = 0; i < 5; i++) {
+            // Reset data
+            WeightedGraphUtilities.setInitialAchievements(goals, initialAchievements);
+            // Set multipliers from data and update achievements
+            WeightedGraphUtilities.setMultipliers(goals, multiplierDouble);
+            WeightedGraphUtilities.clearMultipliersExceptOne(goals, i);
+            WeightedGraphUtilities.updateAchievements(goals);
+
+            // modified_achievements lines 2 - 6 : original achievement scores with multipliers
+            for (Vertex v : goalList) {
+                sb.append(v.getAchievement());
+                sb.append(',');
+            }
+
+            sb.append('\n');
+
+            WeightedGraphUtilities.clearMultipliers(goals);
+        }
 
         // Set one goal to completed and propagate the changes from doing so
         // modified_achievements lines 2-18 : achievement values with one parameter completed

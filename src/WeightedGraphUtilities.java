@@ -78,43 +78,6 @@ public class WeightedGraphUtilities {
     }
 
     /**
-     * <h1>dotProduct</h1>
-     * Takes the dot product of two vectors of doubles.
-     *
-     * @author Erick White
-     * @param arr1 first vector
-     * @param arr2 second vector
-     * @return dot product of two input vectors
-     */
-    public static double dotProduct(ArrayList<Double> arr1, ArrayList<Double> arr2) {
-        double sum = 0;
-
-        for (int i = 0; i < arr1.size(); i++) {
-            sum += arr1.get(i) * arr2.get(i);
-        }
-
-        return sum;
-    }
-
-    /**
-     * <h1>sumArray</h1>
-     * Sums contents of an array.
-     *
-     * @author Erick White
-     * @param arr array to sum (doubles)
-     * @return sum of elements in array
-     */
-    public static double sumArray(ArrayList<Double> arr) {
-        double sum = 0;
-
-        for (Double d : arr) {
-            sum += d;
-        }
-
-        return sum;
-    }
-
-    /**
      * <h1>getGoalPriority</h1>
      * Find the priority level of a {@link Vertex} based on the weights of its connections.
      * The priority is inversely proportional to the layer depth.
@@ -132,7 +95,7 @@ public class WeightedGraphUtilities {
         for (int i = 0; i < graph.getDepth(); i++) {
             layers.add(new ArrayList<>());
             getLayer(parent, graph, 0, i, layers.get(i));
-            layerWeight = sumArray(getLayerWeights(layers.get(i), graph)) / Math.pow(graph.getVertexCount() - 1, i + 1);
+            layerWeight = VectorUtilities.sumVector(getLayerWeights(layers.get(i), graph)) / Math.pow(graph.getVertexCount() - 1, i + 1);
 
             priority += (layerWeight / Math.abs(layerWeight)) / (Math.sqrt(i + 1) * Math.pow(1 - Math.abs(layerWeight), i + 1));
         }
@@ -160,7 +123,7 @@ public class WeightedGraphUtilities {
             layers.add(new ArrayList<>());
             getLayer(parent, graph, 0, i, layers.get(i));
 
-            weightedAchievementProduct += dotProduct(getLayerWeights(layers.get(i), graph), getLayerAchievements(layers.get(i), graph)) / Math.pow((graph.getVertexCount() - 1) * graph.getK(), i + 1);
+            weightedAchievementProduct += VectorUtilities.dotProduct(getLayerWeights(layers.get(i), graph), getLayerAchievements(layers.get(i), graph)) / Math.pow((graph.getVertexCount() - 1) * graph.getK(), i + 1);
         }
 
         return parent.getAchievement() + weightedAchievementProduct;
@@ -331,6 +294,12 @@ public class WeightedGraphUtilities {
     public static void clearMultipliers(WeightedGraph<Vertex> graph) {
         for (int i = 0; i < graph.getVertexCount(); i++) {
             graph.vertexAt(i).clearMultipliers();
+        }
+    }
+
+    public static void clearMultipliersExceptOne(WeightedGraph<Vertex> graph, int keep) {
+        for (int i = 0; i < graph.getVertexCount(); i++) {
+            graph.vertexAt(i).clearMultipliersExceptOne(keep);
         }
     }
 }
