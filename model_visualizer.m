@@ -1,3 +1,5 @@
+%% Setup
+
 graph = readmatrix("src/weights.csv");
 pad_bottom = zeros([1 17]);
 pad_side = zeros([18 1]);

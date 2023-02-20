@@ -31,11 +31,10 @@ bar(priorities(1,:));
 ylabel("Prioritization Score");
 yyaxis right;
 p = plot(slope);
-p.LineWidth = 2;
-ylim([0 0.1]);
+p.LineWidth = 6;
 ylabel("Achievement Score Sensitivity");
 
-set(gca, 'xtick', 1:numel(concat_achievements(:,1)), 'xticklabels', names, 'fontsize', 14);
+set(gca, 'xtick', 1:numel(concat_achievements(:,1)), 'xticklabels', names, 'fontsize', 14, 'LineWidth', 2);
 xtickangle(60);
 
 title("Correlation Between Sensitivity and Priority");
