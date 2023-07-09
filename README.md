@@ -14,6 +14,9 @@ calculate the achievement scores and priorities of each goal. The results are th
 Look at our final paper <a href="COMAP%202023.pdf">here</a>!
 <br>
 <br>
+Our paper won an Honorable Mention, meaning it was in the top 30% of papers submitted for our problem!
+<br>
+<br>
 Check out my teammates' GitHubs!
 <br>
 <a href="https://github.com/Liz2107">Elizabeth Cutting</a>
